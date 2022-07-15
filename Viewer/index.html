@@ -28,6 +28,8 @@
 
 
 	<script>
+		alert("hi");
+
 		const MY_ID = "E2rbXuJfGNscMSBf2vuy";
 		
 		//Helper function
@@ -38,18 +40,29 @@
 			xmlHttp.send( null );
 			return xmlHttp.responseText;
 		}
+		function sleep(milliseconds) {
+			const date = Date.now();
+			let currentDate = null;
+			do {
+				currentDate = Date.now();
+			} while (currentDate - date < milliseconds);
+		}
 
 		
 		const params = new Proxy(new URLSearchParams(window.location.search), {
 			get: (searchParams, prop) => searchParams.get(prop),
 		});
+
+		function redirectsToBase(){
+			alert("Vous devez être connecté !");
+			sleep(5000);
+			location.href = "/";
+		}
 		
 		console.log(params.name);
 
 		if(params.name == null || params.password == null){
-			alert("Vous devez être connecté !");
-			location.href = "/";
-			
+			redirectsToBase();
 		}
 
 		const dbRef = firebase.database().ref();
@@ -83,20 +96,17 @@
 							document.getElementById('timeInfo').innerHTML = timeMessage;
 
 						}else{
-							alert("Vous devez être connecté !");
-							location.href = "/";
+							redirectsToBase();
 						}
 
 
 					} else{
-						alert("Vous devez être connecté !");
-						location.href = "/";
+						redirectsToBase();
 					}
 					
 				}).catch((error)=>{
 					console.log(error);
-					alert("Vous devez être connecté !");
-					location.href = "/";
+					redirectsToBase();
 				})
 
 
@@ -104,13 +114,11 @@
 
 				
 			} else {
-				alert("Vous devez être connecté !");
-				location.href = "/";
+				redirectsToBase();
 			}
 		}).catch((error) => {
 			console.error(error);
-			alert("Vous devez être connecté !");
-			location.href = "/";
+			redirectsToBase();
 		});
 
 
