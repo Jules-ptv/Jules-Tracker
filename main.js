@@ -55,7 +55,7 @@ function submitConnect(){
                     const registeredPassword = snapshot2.val();
                     if(SHA256(password) == registeredPassword){
                         alert("ACCESS GRANTED !!!");
-                        location.href = "/viewer/index.html?name="+name+"&password="+registeredPassword;
+                        location.href = "/viewer.html?name="+name+"&password="+registeredPassword;
                     }else{
                         console.log(SHA256(password), snapshot2);
                         errorText.innerHTML = "Wrong password. Try again";
