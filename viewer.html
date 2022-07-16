@@ -155,10 +155,10 @@
 			updateLocation(indexVal);
 		}
 
+		var jsonFromDatabase =JSON.parse(httpGet("https://places-54870-default-rtdb.europe-west1.firebasedatabase.app/.json?format=export"));
 
 		function updateLocation(index){
 			//Find my location
-			var jsonFromDatabase =JSON.parse(httpGet("https://places-54870-default-rtdb.europe-west1.firebasedatabase.app/.json?format=export"));
 			var myProfile = jsonFromDatabase["users"][MY_ID];
 			console.log(myProfile);
 			console.log("item : n°"+(parseInt(myProfile["n"])+parseInt(index)))
