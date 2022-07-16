@@ -28,7 +28,6 @@
 
 
 	<script>
-		alert("hi");
 
 		const MY_ID = "E2rbXuJfGNscMSBf2vuy";
 		
@@ -78,22 +77,8 @@
 							document.getElementById('content').style.display = "flex";
 
 
-
-							//Find my location
-							var jsonFromDatabase =JSON.parse(httpGet("https://places-54870-default-rtdb.europe-west1.firebasedatabase.app/.json?format=export"));
-							var myProfile = jsonFromDatabase["users"][MY_ID];
-							var latestRecord = myProfile["measurements"][parseInt(myProfile["n"])-1];
+							updateLocation(-1);
 							
-							var longitude = latestRecord["longitude"];
-							var latitude = latestRecord["latitude"];
-							console.log(latestRecord);
-							document.getElementById("gmap_canvas").src = "https://maps.google.com/maps?q="+latitude + "," + longitude+"&t=&z=13&ie=UTF8&iwloc=&output=embed";
-
-							var date = new Date(latestRecord['time']['time']).toLocaleDateString("fr-FR");
-							var hour = new Date(latestRecord['time']['time']).toLocaleTimeString("fr-FR");
-							var timeMessage = "Dernière mesure effectuée le "+date+", à "+hour+".";
-							
-							document.getElementById('timeInfo').innerHTML = timeMessage;
 
 						}else{
 							redirectsToBase();
@@ -134,8 +119,6 @@
 	<div id="content">
 		<h1 class="title--container">Position Tracker</h1>
 
-		<h2 class="subtitle">Find the location of Jules Poitevin.</h2>
-
 
 
 		<div class="mapouter">
@@ -146,9 +129,50 @@
 			</div>
 		</div>
 
+		<div class="slidecontainer">
+			<input type="range" min="-10" max="-1" value="10" class="slider" id="myRange">
+		  </div>
+
 		<p id="timeInfo"></p>
 		
+
+	
 	</div>
+
+
+
+	<script>
+
+		const slider = document.getElementById("myRange");
+
+		slider.oninput = ()=>{
+			var indexVal = slider.value;
+			console.log(indexVal);
+			updateLocation(indexVal);
+		}
+
+
+		function updateLocation(index){
+			//Find my location
+			var jsonFromDatabase =JSON.parse(httpGet("https://places-54870-default-rtdb.europe-west1.firebasedatabase.app/.json?format=export"));
+			var myProfile = jsonFromDatabase["users"][MY_ID];
+			console.log(myProfile);
+			console.log("item : n°"+(parseInt(myProfile["n"])+parseInt(index)))
+			var latestRecord = myProfile["measurements"][parseInt(myProfile["n"])+parseInt(index)];
+			
+			var longitude = latestRecord["longitude"];
+			var latitude = latestRecord["latitude"];
+			console.log(latestRecord);
+			document.getElementById("gmap_canvas").src = "https://maps.google.com/maps?q="+latitude + "," + longitude+"&t=&z=13&ie=UTF8&iwloc=&output=embed";
+
+			var date = new Date(latestRecord['time']['time']).toLocaleDateString("fr-FR");
+			var hour = new Date(latestRecord['time']['time']).toLocaleTimeString("fr-FR");
+			var timeMessage = "Mesure effectuée le "+date+", à "+hour+".";
+			
+			document.getElementById('timeInfo').innerHTML = timeMessage;
+		}
+
+	</script>
 	
 </body>
 </html>
